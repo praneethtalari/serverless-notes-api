@@ -42,3 +42,14 @@ resource "aws_lambda_permission" "api_permission" {
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.http_api.execution_arn}/*"
 }
+resource "aws_apigatewayv2_api" "http_api" {
+  name          = "notes-http-api"
+  protocol_type = "HTTP"
+
+  cors_configuration {
+    allow_origins = ["*"]
+    allow_headers = ["*"]
+    allow_methods = ["GET", "POST", "OPTIONS"]
+  }
+}
+
