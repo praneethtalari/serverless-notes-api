@@ -1,7 +1,9 @@
 output "api_url" {
-  value = aws_apigatewayv2_api.http_api.api_endpoint
+  description = "Base URL of the Notes HTTP API"
+  value       = aws_apigatewayv2_api.http_api.api_endpoint
 }
 
-output "api_url_stage" {
-  value = aws_apigatewayv2_stage.default.invoke_url
+output "notes_endpoint" {
+  description = "Full /notes endpoint for CRUD operations"
+  value       = "${aws_apigatewayv2_api.http_api.api_endpoint}/notes"
 }
