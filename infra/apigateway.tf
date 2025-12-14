@@ -10,25 +10,29 @@ resource "aws_apigatewayv2_integration" "lambda_integration" {
   payload_format_version = "2.0"
 }
 
+# Create note
 resource "aws_apigatewayv2_route" "post_notes" {
   api_id    = aws_apigatewayv2_api.http_api.id
   route_key = "POST /notes"
   target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
 }
 
+# Get all notes
 resource "aws_apigatewayv2_route" "get_notes" {
   api_id    = aws_apigatewayv2_api.http_api.id
   route_key = "GET /notes"
   target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
 }
 
-resource "aws_apigatewayv2_route" "put_note" {
+# Update note
+resource "aws_apigatewayv2_route" "put_notes" {
   api_id    = aws_apigatewayv2_api.http_api.id
   route_key = "PUT /notes"
   target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
 }
 
-resource "aws_apigatewayv2_route" "delete_note" {
+# Delete note
+resource "aws_apigatewayv2_route" "delete_notes" {
   api_id    = aws_apigatewayv2_api.http_api.id
   route_key = "DELETE /notes"
   target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
@@ -46,4 +50,8 @@ resource "aws_lambda_permission" "api_permission" {
   function_name = aws_lambda_function.notes_lambda.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.http_api.execution_arn}/*"
+}
+
+output "api_url" {
+  value = aws_apigatewayv2_api.http_api.api_endpoint
 }
