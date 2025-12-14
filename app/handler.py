@@ -9,8 +9,6 @@ table = dynamodb.Table("notes")
 def lambda_handler(event, context):
     try:
         method = event.get("requestContext", {}).get("http", {}).get("method")
-        path_params = event.get("pathParameters") or {}
-        note_id = path_params.get("note_id")
 
         if method == "POST":
             body = json.loads(event["body"])
@@ -24,20 +22,15 @@ def lambda_handler(event, context):
             table.put_item(Item=item)
             return respond(201, item)
 
-        elif method == "GET" and note_id:
-            response = table.get_item(Key={"note_id": note_id})
-            item = response.get("Item")
-            if item:
-                return respond(200, item)
-            else:
-                return respond(404, {"error": "Note not found"})
-
         elif method == "GET":
             response = table.scan()
             return respond(200, response.get("Items", []))
 
-        elif method == "PUT" and note_id:
+        elif method == "PUT":
             body = json.loads(event["body"])
+            note_id = body.get("note_id")
+            if not note_id:
+                return respond(400, {"error": "note_id required in body"})
             table.update_item(
                 Key={"note_id": note_id},
                 UpdateExpression="SET title = :t, body = :b",
@@ -48,12 +41,16 @@ def lambda_handler(event, context):
             )
             return respond(200, {"message": "Note updated", "note_id": note_id})
 
-        elif method == "DELETE" and note_id:
+        elif method == "DELETE":
+            body = json.loads(event["body"])
+            note_id = body.get("note_id")
+            if not note_id:
+                return respond(400, {"error": "note_id required in body"})
             table.delete_item(Key={"note_id": note_id})
             return respond(200, {"message": "Note deleted", "note_id": note_id})
 
         else:
-            return respond(400, {"error": "Unsupported method or missing note_id"})
+            return respond(400, {"error": "Unsupported method"})
 
     except Exception as e:
         print(f"Error: {str(e)}")
