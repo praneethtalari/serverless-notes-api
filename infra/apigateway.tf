@@ -1,10 +1,14 @@
-
 resource "aws_apigatewayv2_api" "http_api" {
   name          = "notes-http-api"
   protocol_type = "HTTP"
+
+  # Enable CORS
+  cors_configuration {
+    allow_origins = ["*"]
+    allow_headers = ["*"]
+    allow_methods = ["GET", "POST", "OPTIONS"]
+  }
 }
-
-
 
 resource "aws_apigatewayv2_integration" "lambda_integration" {
   api_id                 = aws_apigatewayv2_api.http_api.id
@@ -13,21 +17,17 @@ resource "aws_apigatewayv2_integration" "lambda_integration" {
   payload_format_version = "2.0"
 }
 
-
-
 resource "aws_apigatewayv2_route" "post_notes" {
   api_id    = aws_apigatewayv2_api.http_api.id
   route_key = "POST /notes"
   target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
 }
 
-
 resource "aws_apigatewayv2_route" "get_notes" {
   api_id    = aws_apigatewayv2_api.http_api.id
   route_key = "GET /notes"
   target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
 }
-
 
 resource "aws_apigatewayv2_stage" "default" {
   api_id      = aws_apigatewayv2_api.http_api.id
@@ -41,15 +41,5 @@ resource "aws_lambda_permission" "api_permission" {
   function_name = aws_lambda_function.notes_lambda.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.http_api.execution_arn}/*"
-}
-resource "aws_apigatewayv2_api" "http_api" {
-  name          = "notes-http-api"
-  protocol_type = "HTTP"
-
-  cors_configuration {
-    allow_origins = ["*"]
-    allow_headers = ["*"]
-    allow_methods = ["GET", "POST", "OPTIONS"]
-  }
 }
 
