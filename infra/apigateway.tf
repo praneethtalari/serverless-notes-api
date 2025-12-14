@@ -1,7 +1,10 @@
+
 resource "aws_apigatewayv2_api" "http_api" {
   name          = "notes-http-api"
   protocol_type = "HTTP"
 }
+
+
 
 resource "aws_apigatewayv2_integration" "lambda_integration" {
   api_id                 = aws_apigatewayv2_api.http_api.id
@@ -10,33 +13,21 @@ resource "aws_apigatewayv2_integration" "lambda_integration" {
   payload_format_version = "2.0"
 }
 
-# Create note
+
+
 resource "aws_apigatewayv2_route" "post_notes" {
   api_id    = aws_apigatewayv2_api.http_api.id
   route_key = "POST /notes"
   target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
 }
 
-# Get all notes
+
 resource "aws_apigatewayv2_route" "get_notes" {
   api_id    = aws_apigatewayv2_api.http_api.id
   route_key = "GET /notes"
   target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
 }
 
-# Update note
-resource "aws_apigatewayv2_route" "put_notes" {
-  api_id    = aws_apigatewayv2_api.http_api.id
-  route_key = "PUT /notes"
-  target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
-}
-
-# Delete note
-resource "aws_apigatewayv2_route" "delete_notes" {
-  api_id    = aws_apigatewayv2_api.http_api.id
-  route_key = "DELETE /notes"
-  target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
-}
 
 resource "aws_apigatewayv2_stage" "default" {
   api_id      = aws_apigatewayv2_api.http_api.id
