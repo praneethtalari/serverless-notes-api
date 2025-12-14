@@ -9,7 +9,7 @@
 - All changes go through Pull Requests.
 
 ## Responsibilities
-- **Sai Krishna:** Lambda functions, API design, README, documentation.
+- **Sai Krishna Praneeth:** Lambda functions, API design, README, documentation.
 - **Sai Vardhan:** Terraform IaC, monitoring plan, IAM/policies, architecture diagrams.
 
 ## Review Process
