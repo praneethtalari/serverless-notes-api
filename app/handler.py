@@ -40,9 +40,16 @@ def lambda_handler(event, context):
         return respond(500, {"error": "Internal Server Error"})
 
 
+
 def respond(status, body):
     return {
         "statusCode": status,
-        "headers": {"Content-Type": "application/json"},
+        "headers": {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Allow-Methods": "OPTIONS,GET,POST"
+        },
         "body": json.dumps(body)
     }
+
