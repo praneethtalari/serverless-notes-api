@@ -24,13 +24,13 @@ resource "aws_apigatewayv2_route" "get_notes" {
 
 resource "aws_apigatewayv2_route" "put_note" {
   api_id    = aws_apigatewayv2_api.http_api.id
-  route_key = "PUT /notes/{note_id}"
+  route_key = "PUT /notes"
   target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
 }
 
 resource "aws_apigatewayv2_route" "delete_note" {
   api_id    = aws_apigatewayv2_api.http_api.id
-  route_key = "DELETE /notes/{note_id}"
+  route_key = "DELETE /notes"
   target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
 }
 
