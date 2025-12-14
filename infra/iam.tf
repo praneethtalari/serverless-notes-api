@@ -20,20 +20,23 @@ resource "aws_iam_role_policy" "lambda_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Effect = "Allow",
-        Action = [
-          "dynamodb:PutItem",
-          "dynamodb:Scan"
-        ],
-        Resource = aws_dynamodb_table.notes.arn
+        Effect   = "Allow",
+        Action   = "dynamodb:*",
+        Resource = "*"
       },
       {
-        Effect = "Allow",
-        Action = [
-          "logs:CreateLogGroup",
-          "logs:CreateLogStream",
-          "logs:PutLogEvents"
-        ],
+        Effect   = "Allow",
+        Action   = "apigateway:*",
+        Resource = "*"
+      },
+      {
+        Effect   = "Allow",
+        Action   = "lambda:*",
+        Resource = "*"
+      },
+      {
+        Effect   = "Allow",
+        Action   = "logs:*",
         Resource = "*"
       }
     ]
